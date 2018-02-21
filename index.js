@@ -84,6 +84,9 @@ fi = (function() {
       return newArray;
     },
 
+    // I want you to write a different sort and use a faster sort
+    // how do you prove it???? how can i write a function that could prove speed
+
     sortBy: function(array, iteratee) {
       const newArray = array.slice();
       // use a better sort -> Merge Sort
