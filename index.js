@@ -114,16 +114,23 @@ fi = (function() {
     flatten: function(array, shallow){
       let newArray = []
       if(!shallow){
-          function flatten(array){
-            for (let i = 0; i < array.length; i ++) {
-              if (Array.isArray(array[i])) {
-                flatten(array[i])
-              } else{
-                newArray.push(array[i])
-              }
-            }
+        for(let i = 0; i < array.length; i++){
+          if (Array.isArray(array[i])){
+            newArray = newArray.concat(this.flatten(array[i]))
+          } else{
+            newArray.push(array[i])
           }
-          flatten(array);
+        }
+          // function flatten(array){
+          //   for (let i = 0; i < array.length; i ++) {
+          //     if (Array.isArray(array[i])) {
+          //       flatten(array[i])
+          //     } else{
+          //       newArray.push(array[i])
+          //     }
+          //   }
+          // }
+          // flatten(array);
       } else if (shallow === true){
         for (const key in array) {
           if (typeof array[key] === 'object') {
