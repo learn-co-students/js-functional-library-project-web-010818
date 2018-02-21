@@ -118,16 +118,16 @@ fi = (function() {
           }
         }
       } else {
-        function flatten (array) {
+        function deepFlatten (array) {
           for (let i = 0; i < array.length; i++) {
             if (Array.isArray(array[i])) {
-              flatten(array[i]);
+              deepFlatten(array[i]);
             } else {
               newArray.push(array[i]);
             }
           }
         }
-        flatten(array);
+        deepFlatten(array);
       }
       return newArray;
     },
@@ -179,15 +179,6 @@ fi = (function() {
       }
       return funcArr.sort();
     }
-
-
-
-
-
-
-
-
-
   }
 })()
 
