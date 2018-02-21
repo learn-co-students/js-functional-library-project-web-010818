@@ -106,7 +106,7 @@ fi = (function() {
     },
 
     flatten: function(array, shallow) {
-      const newArray = [];
+      let newArray = [];
       if (shallow) {
         for (let i = 0; i < array.length; i++) {
           if (Array.isArray(array[i])) {  //array[i] is another array
@@ -118,16 +118,23 @@ fi = (function() {
           }
         }
       } else {
-        function deepFlatten (array) {
-          for (let i = 0; i < array.length; i++) {
-            if (Array.isArray(array[i])) {
-              deepFlatten(array[i]);
-            } else {
-              newArray.push(array[i]);
-            }
+        for (let i = 0; i < array.length; i++) {
+          if (Array.isArray(array[i])) {
+            newArray = newArray.concat(this.flatten(array[i]))
+          } else {
+            newArray.push(array[i]);
           }
         }
-        deepFlatten(array);
+        // function deepFlatten (array) {
+        //   for (let i = 0; i < array.length; i++) {
+        //     if (Array.isArray(array[i])) {
+        //       deepFlatten(array[i]);
+        //     } else {
+        //       newArray.push(array[i]);
+        //     }
+        //   }
+        // }
+        // deepFlatten(array);
       }
       return newArray;
     },
