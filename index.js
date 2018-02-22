@@ -49,9 +49,10 @@ fi = (function() {
     find: function(collection, callback) {
       for (i = 0; i < collection.length; i++ ) {
         if (callback(collection[i])) {
-          return collection[i]
+          return true;
         }
       }
+      return false;
     },
 
     filter: function(collection, callback) {
@@ -71,12 +72,20 @@ fi = (function() {
 
     first: function(array, n) {
       n = n || 1;
-      return array.slice(0, n)
+      if (n > 1) {
+        return array.slice(0, n)
+      } else {
+        return array.slice(0, n)[0]
+      }
     },
 
     last: function(array, n) {
       n = n || 1;
-      return array.slice(-n)
+      if (n > 1) {
+        return array.slice(-n)
+      } else {
+        return array.slice(-n)[0]
+      }
     },
 
     compact: function(collection) {
@@ -123,6 +132,26 @@ fi = (function() {
         }
         return resultArray;
       },
+        // [1, [2], [3, [[4]]]]  ==> [1, 2, 3, [[4]]]
+    flatten: function(array, shallow) {
+      if (shallow){
+        newArray = [];
+        for(i=0;i < array.length; i++) {
+          newArray = newArray.concat(array[i]);
+        }
+        return newArray;
+      }
+      if (Array.isArray(array)) {
+        if (array.length === 1) {
+          return flatten(array[0], shallow)
+        } else {
+            console.log("Concat", array[0], "to", array.slice(1));
+            return flatten(array[0], shallow).concat(flatten(array.slice(1), shallow))
+        }
+      } else {
+        return [array]
+      }
+    },
 
     functions: function() {
 
