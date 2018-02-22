@@ -148,10 +148,11 @@ fi = (function() {
     },
 
     sortBy: function(array, cb) {
-      if (typeof cb(array[0]) === "number") {
-        return array.sort((a, b) => cb(a) - cb(b));
+      newArr = array.slice()
+      if (typeof cb(newArr[0]) === "number") {
+        return newArr.sort((a, b) => cb(a) - cb(b));
       } else {
-        return array.sort((a, b) => cb(a).localeCompare(cb(b)))
+        return newArr.sort((a, b) => cb(a).localeCompare(cb(b)))
       }
     },
 
@@ -179,53 +180,33 @@ fi = (function() {
       return result;
     },
 
-    uniq: function(array, isSorted, cb) {
-      let result = [];
-      let current = [];
-      // if (!cb) {
-      //   cb = function(item) {return item}
-      // }
-      // if (isSorted) {
-      //   fi.sortBy(array, cb)
-      // } else {
-      //   let current = array.splice()
-      // }
+    uniqSorted: function(collection, iteratee) {
+    const sorted = [collection[0]]
+    for (let idx = 1; idx < collection.length; idx++) {
+      if (sorted[idx-1] !== collection[idx])
+        sorted.push(collection[idx])
+    }
+    return sorted
+  },
 
-      if (!isSorted) {
-        current = array.sort();
-      } else {
-        current = array.slice();
-      }
-
-      if (cb) {
-        let cbArray = []
-        for (const e of array) {
-          cbArray.push(cb(e))
-        }
-        for (var i = 0; i < current.length; i++) {
-
-          if (i !== 0) {
-            if (!cbArray.includes()) { //this line broken
-              result.push(current[i]);
-            }
-          } else {
-            result.push(current[i])
-          }
-        }
-      } else {
-        for (var i = 0; i < current.length; i++) {
-          if (i !== 0) {
-            if (!result.includes(current[i])) {
-              result.push(current[i]);
-            }
-          } else {
-            result.push(current[i])
-          }
+  uniq: function(collection, sorted=false, iteratee=false) {
+    if (sorted) {
+      return fi.uniqSorted(collection, iteratee)
+    } else if (!iteratee) {
+      return Array.from(new Set(collection))
+    } else {
+      const modifiedVals = new Set()
+      const uniqVals = new Set()
+      for (let val of collection) {
+        const moddedVal = iteratee(val)
+        if (!modifiedVals.has(moddedVal)) {
+          modifiedVals.add(moddedVal)
+          uniqVals.add(val)
         }
       }
-
-      return result
-    },
+      return Array.from(uniqVals)
+    }
+  },
 
     keys: function(object) {
       let keys = []
