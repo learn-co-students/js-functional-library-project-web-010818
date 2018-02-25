@@ -1,3 +1,4 @@
+console.log("Got here!");
 fi = (function() {
   return {
     libraryMethod: function() {
@@ -100,38 +101,25 @@ fi = (function() {
     },
 
     sortBy: function(array, callback) {
-      resultArray = []
-      let value;
+      resultArray = [];
 
       for (i = 0; i < array.length; i++ ) {
-        value = (callback(array[i]))
-        if (i === 0) {
-          resultArray.push(array[i])
-        } else {
-          // iterate through resultArray until you find something bigger than yourself, insert before it
-          for (j = 0; j < resultArray.length; j++) {
-            if (typeof value === "string") {
-              if ((callback(resultArray[j]).localeCompare(value)) >= 0) {
-                resultArray.splice(j, 0, array[i])
-                break;
-              } else if (j === resultArray.length - 1) {
-                resultArray.push(array[i])
-                break;
-              }
-            } else {
-                if (value <= callback(resultArray[j])) {
-                  resultArray.splice(j, 0, array[i])
-                  break;
-                } else if (j === resultArray.length - 1) {
-                  resultArray.push(array[i])
-                  break;
-                }
-              }
-            }
+        resultArray.push(callback(array[i]))
+      }
+
+      // now sort resultArray using bubblesort algorithm
+      for (let i = (resultArray.length - 1); i > 0; --i ) {
+        for ( let j = 0; j < i; ++j ) {
+          if ((resultArray[j] - resultArray[j+1]) > 0) {
+            // swap
+            const temp = resultArray[j];
+            resultArray[j] = resultArray[j+1];
+            resultArray[j+1] = temp;
           }
         }
-        return resultArray;
-      },
+      }
+      return resultArray;
+    },
         // [1, [2], [3, [[4]]]]  ==> [1, 2, 3, [[4]]]
     flatten: function(array, shallow) {
       if (shallow){
@@ -143,14 +131,51 @@ fi = (function() {
       }
       if (Array.isArray(array)) {
         if (array.length === 1) {
-          return flatten(array[0], shallow)
+          return this.flatten(array[0], shallow)
         } else {
-            console.log("Concat", array[0], "to", array.slice(1));
-            return flatten(array[0], shallow).concat(flatten(array.slice(1), shallow))
+          return this.flatten(array[0], shallow).concat(this.flatten(array.slice(1), shallow))
         }
       } else {
         return [array]
       }
+    },
+
+    uniq: function(array, isSorted, iteratee) {
+      uniq = [];
+      if (iteratee) {
+        values = [];
+        let isThere;
+        for (var i = 0; i < array.length; i++) {
+          there = values.includes(iteratee(array[i]))
+          if (!there) {
+            uniq.push(array[i]);
+            values.push(iteratee(array[i]));
+          }
+        }
+      } else {
+        for (var i = 0; i < array.length; i++) {
+          if (array.indexOf(array[i]) === i) {
+            uniq.push(array[i]);
+          }
+        }
+      }
+      return uniq;
+    },
+
+    keys: function(obj) {
+      let keys = [];
+      for (var key in obj) {
+          keys.push(key);
+      }
+      return keys;
+    },
+
+    values: function(obj) {
+      let values = [];
+      for (var key in obj) {
+          values.push(obj[key]);
+      }
+      return values;
     },
 
     functions: function() {
