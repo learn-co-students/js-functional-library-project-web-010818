@@ -178,7 +178,19 @@ fi = (function() {
       return values;
     },
 
-    functions: function() {
+    functions: function(obj) {
+      let funcArr = [];
+      for (var key in obj) {
+        if ((typeof obj[key]) === "function") {
+          funcArr.push(key);
+        }
+      }
+
+      //sort alphabetically using my own sortBy
+      return funcArr.sort((a,b) => (a - b));
+    },
+
+    functions2: function() {
 
     },
 
